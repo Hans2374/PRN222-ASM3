@@ -1,18 +1,35 @@
-<Project Sdk="Microsoft.NET.Sdk.Worker">
+﻿<Project Sdk="Microsoft.NET.Sdk.Worker">
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<UserSecretsId>dotnet-PaymentCVSTS.WorkerService-ec2c6dbe-75aa-46cc-956d-bf9b364f97df</UserSecretsId>
+		<!-- Add this for better Windows service support -->
+		<OutputType>exe</OutputType>
+		<PublishSingleFile Condition="'$(Configuration)' == 'Release'">true</PublishSingleFile>
+		<RuntimeIdentifier>win-x64</RuntimeIdentifier>
+		<PlatformTarget>x64</PlatformTarget>
+	</PropertyGroup>
 
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <UserSecretsId>dotnet-PaymentCVSTS.WorkerService-ec2c6dbe-75aa-46cc-956d-bf9b364f97df</UserSecretsId>
-  </PropertyGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.1" />
+		<PackageReference Include="Microsoft.Extensions.Hosting.WindowsServices" Version="8.0.1" />
+		<!-- Update this package version -->
+		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.1" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.5" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.5" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.1" />
-    <PackageReference Include="Microsoft.Extensions.Hosting.WindowsServices" Version="8.0.1" />
-  </ItemGroup>
+	<!-- Copy all referenced project DLLs locally -->
+	<Target Name="CopyReferencedProjectDlls" AfterTargets="Build">
+		<Copy SourceFiles="..\..\SP25_PRN222_NET1704_ASM2_SE182845_KhoiNLM\PaymentCVSTS.Services\bin\$(Configuration)\net8.0\PaymentCVSTS.Services.dll"
+			  DestinationFolder="$(OutDir)" />
+		<Copy SourceFiles="..\..\SP25_PRN222_NET1704_ASM2_SE182845_KhoiNLM\PaymentCVSTS.Repositories\bin\$(Configuration)\net8.0\PaymentCVSTS.Repositories.dll"
+			  DestinationFolder="$(OutDir)" />
+	</Target>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\SP25_PRN222_NET1704_ASM2_SE182845_KhoiNLM\PaymentCVSTS.Services\PaymentCVSTS.Services.csproj" />
-  </ItemGroup>
+	<!-- Keep the project reference for development -->
+	<ItemGroup>
+		<ProjectReference Include="..\..\SP25_PRN222_NET1704_ASM2_SE182845_KhoiNLM\PaymentCVSTS.Services\PaymentCVSTS.Services.csproj" />
+	</ItemGroup>
 </Project>

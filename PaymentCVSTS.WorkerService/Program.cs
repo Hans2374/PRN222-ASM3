@@ -1,8 +1,18 @@
 using PaymentCVSTS.WorkerService;
 using PaymentCVSTS.Services.Interfaces;
 using PaymentCVSTS.Services.Implements;
+using Microsoft.Extensions.Logging.EventLog;
 
 var builder = Host.CreateApplicationBuilder(args);
+
+// Configure logging
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
+builder.Logging.AddEventLog(config =>
+{
+    config.LogName = "PaymentCVSTS Service";
+    config.SourceName = "PaymentCVSTS Service Source";
+});
 
 // DI
 builder.Services.AddSingleton<IPaymentService, PaymentService>();
